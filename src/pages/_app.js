@@ -1,8 +1,8 @@
 import { CssBaseline, Snackbar } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import Head from 'next/head'
-import '../styles/roboto.css'
 import '../styles/theme.css'
+import '../styles/guide.css'
 import '../styles/itemModal.css'
 import settings from 'public/settings.json';
 import ReactGA from 'react-ga';
@@ -12,6 +12,7 @@ import { useRouter } from 'next/router'
 import isBrowser from '../utils/isBrowser'
 import useCurrentDevice from '../utils/useCurrentDevice'
 import { parse } from 'query-string'
+import 'fontsource-roboto/latin.css'
 
 const Notice = ({ onClose, notice }) => {
   const anchorOrigin = { vertical: 'top', horizontal: 'center' }
@@ -32,6 +33,7 @@ export default function App({ Component, pageProps }) {
   const ready = !isBrowser() || router.isReady
 
   useEffect(() => {
+    window.landscapeRouter = router;
     window.addEventListener('message', function(event) {
       var data = event.data;
       if (data.type === "css") {
@@ -55,6 +57,16 @@ export default function App({ Component, pageProps }) {
       element.setAttribute("rel", "stylesheet");
       element.setAttribute("type", "text/css");
       element.setAttribute("href", params.css);
+      document.getElementsByTagName("head")[0].appendChild(element);
+    }
+    if (params.style) {
+      var element = document.createElement("style");
+      try {
+        params.style = JSON.parse(params.style)
+      } catch(ex) {
+
+      }
+      element.innerHTML = params.style;
       document.getElementsByTagName("head")[0].appendChild(element);
     }
   }, []);

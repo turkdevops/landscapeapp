@@ -14,7 +14,6 @@ import Footer from './Footer';
 import EmbeddedFooter from './EmbeddedFooter';
 
 import isGoogle from '../utils/isGoogle';
-import bus from '../reducers/bus';
 import settings from 'public/settings.json'
 import useCurrentDevice from '../utils/useCurrentDevice'
 import LandscapeContent from './BigPicture/LandscapeContent'
@@ -29,10 +28,7 @@ import SwitchButton from './BigPicture/SwitchButton'
 import ExportCsv from './ExportCsv'
 import MainContent from './MainContent'
 import Presets from './Presets'
-
-bus.on('scrollToTop', function() {
-  (document.scrollingElement || document.body).scrollTop = 0;
-});
+import GuideToggle from './GuideToggle'
 
 function preventDefault(e){
   const modal = e.srcElement.closest('.modal-body');
@@ -150,14 +146,15 @@ const HomePage = _ => {
 
   return <>
     {selectedItemId && <ItemDialog/>}
-    <div className={classNames('app',{'filters-opened' : sidebarVisible, 'big-picture': isBigPicture })}>
+    <div id="home" className={classNames('app',{'filters-opened' : sidebarVisible, 'big-picture': isBigPicture })}>
       <div style={{marginTop: isIphone && selectedItemId ? -lastScrollPosition : 0}} className={classNames({"iphone-scroller": isIphone && selectedItemId}, 'main-parent')} >
         { !isEmbed && !isFullscreen && <>
           <Header />
           <IconButton className="sidebar-show" title="Show sidebar" onClick={showSidebar}><MenuIcon /></IconButton>
           <div className="sidebar">
             <div className="sidebar-scroll">
-              <IconButton className="sidebar-collapse" title="Hide sidebar" onClick={hideSidebar}><CloseIcon /></IconButton>
+              <IconButton className="sidebar-collapse" title="Hide sidebar" size="small" onClick={hideSidebar}><CloseIcon /></IconButton>
+              <GuideToggle active="landscape"/>
               <ResetFilters />
               <Grouping/>
               <Sorting/>
