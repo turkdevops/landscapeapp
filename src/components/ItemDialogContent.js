@@ -104,6 +104,9 @@ const projectTag = function({relation, isSubsidiaryProject, project, ...item}) {
 const memberTag = function({relation, member, enduser}) {
   if (relation === 'member' || relation === 'company') {
     const info = settings.membership[member];
+    if (!info) {
+      return null;
+    }
     const name = info.name;
     const label = enduser ? (info.end_user_label || info.label) : info.label ;
     if (!label) {
@@ -230,7 +233,7 @@ const chart = function(itemInfo) {
 }
 
 const participation = function(itemInfo) {
-  const { innerWidth } = window;
+  const { innerWidth } = useWindowSize();
   const { params } = useContext(LandscapeContext)
   if (params.isEmbed || !itemInfo.github_data || !itemInfo.github_data.contributions) {
     return null;
