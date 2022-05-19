@@ -9,10 +9,12 @@
 //     url(id by default): how the value is stored in the url
 //     sortOrder(element index by default): sort order when grouping
 //     match: function
+import path from 'path';
+import fs from 'fs';
 import _ from 'lodash';
-import lookups from 'project/lookup.json';
+import lookups from  'project/lookup'
 import unpack from '../utils/unpackArray';
-import settings from 'public/settings.json';
+import settings from 'dist/settings'
 import isParent from '../utils/isParent';
 
 const relationField = (function() {
@@ -202,8 +204,8 @@ const fields = {
     label: 'Commits this year',
     url: 'commits'
   },
-  bestPracticeBadgeId: {
-    id: 'bestPracticeBadgeId',
+  bestPracticePercentage: {
+    id: 'bestPracticePercentage',
     label: 'Badge Id',
     url: 'bestpractices',
     filterFn: function(filter, value) {
@@ -211,10 +213,10 @@ const fields = {
         return true;
       }
       if (filter === true) {
-        return !!value;
+        return value === 100;
       }
       if (filter === false) {
-        return !value;
+        return value !== 100;
       }
     },
     values: [{id: true, label: 'Yes', url: 'yes'}, {id: false, label: 'No', url: 'no'}]
@@ -334,17 +336,17 @@ const processValuesBeforeSaving = function({options, values}) {
   });
 };
 
+// passed to the client
 export function options(field) {
   return fields[field].values.map(function(values) {
     return {
-      id: values.id,
+      id: values.url,
       label: values.label,
-      level: values.level,
-      children: values.children,
-      parentId: values.parentId
+      level: values.level || 1,
     };
   });
 }
+
 export function filterFn({field, filters}) {
   const fieldInfo = fields[field];
   const filter = filters[field];
